@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Registro de entrenamiento TKD</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <style>
   *{box-sizing:border-box;margin:0;padding:0}
   :root{
@@ -12,10 +11,11 @@
     --text-primary:#0b0b0b;--text-secondary:#52514e;--text-muted:#898781;
     --border:rgba(11,11,11,0.10);--border-strong:rgba(11,11,11,0.18);
     --fill-accent:#185fa5;--fill-accent-hover:#0c447c;
-    --bg-accent:#e6f1fb;--text-accent:#185fa5;--border-accent:#85b7eb;
+    --bg-accent:#e6f1fb;--text-accent:#185fa5;
     --bg-danger:#fcebeb;--text-danger:#a32d2d;--border-danger:#f09595;
     --fill-danger:#e24b4a;
     --bg-warning:#faeeda;--text-warning:#854f0b;
+    --bg-success:#eaf3de;--text-success:#3b6d11;
     --radius:8px;
     --font-sans:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
   }
@@ -25,19 +25,20 @@
       --text-primary:#ffffff;--text-secondary:#c3c2b7;--text-muted:#898781;
       --border:rgba(255,255,255,0.10);--border-strong:rgba(255,255,255,0.18);
       --fill-accent:#3987e5;--fill-accent-hover:#2a78d6;
-      --bg-accent:#0c2d52;--text-accent:#85b7eb;--border-accent:#185fa5;
+      --bg-accent:#0c2d52;--text-accent:#85b7eb;
       --bg-danger:#2d1010;--text-danger:#f09595;--border-danger:#791f1f;
       --fill-danger:#e24b4a;
       --bg-warning:#2a1a04;--text-warning:#fac775;
+      --bg-success:#0d1f04;--text-success:#97c459;
     }
   }
-  body{font-family:var(--font-sans);background:var(--surface-0);color:var(--text-primary);min-height:100vh;padding:0}
+  body{font-family:var(--font-sans);background:var(--surface-0);color:var(--text-primary);min-height:100vh}
   .header{background:var(--surface-2);border-bottom:0.5px solid var(--border);padding:14px 24px;display:flex;align-items:center;gap:10px}
-  .header-icon{width:32px;height:32px;background:#e34948;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px;font-weight:700}
-  .header h1{font-size:16px;font-weight:500;color:var(--text-primary)}
+  .header-icon{width:32px;height:32px;background:#e34948;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:15px;font-weight:700;flex-shrink:0}
+  .header h1{font-size:16px;font-weight:500}
   .header p{font-size:12px;color:var(--text-muted);margin-top:1px}
   .container{max-width:720px;margin:0 auto;padding:24px 16px}
-  .tabs{display:flex;gap:4px;margin-bottom:1.5rem;border-bottom:0.5px solid var(--border);padding-bottom:0}
+  .tabs{display:flex;gap:4px;margin-bottom:1.5rem;border-bottom:0.5px solid var(--border)}
   .tab{padding:8px 16px;font-size:14px;font-weight:500;color:var(--text-secondary);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-0.5px;background:none;border-top:none;border-left:none;border-right:none;font-family:var(--font-sans)}
   .tab.active{color:var(--fill-accent);border-bottom-color:var(--fill-accent)}
   .info-bar{background:var(--surface-1);border:0.5px solid var(--border);border-radius:var(--radius);padding:10px 14px;margin-bottom:1.25rem;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
@@ -47,11 +48,7 @@
   .form-group{display:flex;flex-direction:column;gap:6px}
   .form-group.full{grid-column:1/-1}
   label{font-size:13px;color:var(--text-secondary);font-weight:500}
-  input[type=number],select,textarea{
-    width:100%;padding:8px 10px;font-size:14px;border:0.5px solid var(--border-strong);
-    border-radius:var(--radius);background:var(--surface-2);color:var(--text-primary);
-    font-family:var(--font-sans);outline:none;
-  }
+  input[type=number],select,textarea{width:100%;padding:8px 10px;font-size:14px;border:0.5px solid var(--border-strong);border-radius:var(--radius);background:var(--surface-2);color:var(--text-primary);font-family:var(--font-sans);outline:none}
   input[type=number]:focus,select:focus,textarea:focus{border-color:var(--fill-accent)}
   input[type=range]{width:100%;accent-color:var(--fill-accent);cursor:pointer}
   .rpe-row{display:flex;align-items:center;gap:10px}
@@ -65,7 +62,7 @@
   .health-opt{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--text-secondary);cursor:pointer}
   .health-opt input{accent-color:var(--fill-accent)}
   .injury-panel{border:0.5px solid var(--border-danger);border-radius:var(--radius);padding:12px 14px;margin-top:10px;background:var(--bg-danger)}
-  .injury-panel > label{color:var(--text-danger);font-size:12px;margin-bottom:8px;display:block;font-weight:500}
+  .injury-panel>.ilabel{color:var(--text-danger);font-size:12px;margin-bottom:8px;display:block;font-weight:500}
   .tipo-lesion-btns{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
   .tl-btn{padding:5px 11px;font-size:12px;border:0.5px solid var(--border-danger);border-radius:var(--radius);cursor:pointer;background:none;color:var(--text-danger);transition:all .15s;font-family:var(--font-sans)}
   .tl-btn.sel{background:var(--fill-danger);color:#fff;border-color:var(--fill-danger)}
@@ -77,13 +74,16 @@
   .calc-unit{font-size:13px;color:var(--text-muted);margin-left:4px}
   .btn-primary{padding:10px 20px;background:var(--fill-accent);color:#fff;border:none;border-radius:var(--radius);font-size:14px;font-weight:500;cursor:pointer;width:100%;font-family:var(--font-sans);transition:background .15s}
   .btn-primary:hover{background:var(--fill-accent-hover)}
+  .btn-primary:disabled{opacity:0.5;cursor:not-allowed}
   .toast-wrap{height:44px;display:flex;align-items:center;justify-content:center;margin-top:8px}
-  .toast{background:var(--text-primary);color:var(--surface-2);padding:8px 18px;border-radius:var(--radius);font-size:13px;opacity:0;transition:opacity .3s;font-family:var(--font-sans)}
+  .toast{padding:8px 18px;border-radius:var(--radius);font-size:13px;opacity:0;transition:opacity .3s;font-family:var(--font-sans)}
   .toast.show{opacity:1}
+  .toast.ok{background:#0b0b0b;color:#fff}
+  .toast.err{background:var(--fill-danger);color:#fff}
   .week-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem}
   .week-nav button{padding:6px 16px;font-size:13px;border:0.5px solid var(--border-strong);border-radius:var(--radius);background:var(--surface-2);color:var(--text-primary);cursor:pointer;font-family:var(--font-sans)}
   .week-nav button:hover{background:var(--surface-1)}
-  .week-label{font-size:15px;font-weight:500;color:var(--text-primary)}
+  .week-label{font-size:15px;font-weight:500}
   .chart-wrap{position:relative;width:100%;height:360px;margin-bottom:1.5rem}
   .legend{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:1rem}
   .legend-item{display:flex;align-items:center;gap:5px;font-size:12px;color:var(--text-secondary)}
@@ -91,7 +91,7 @@
   .stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin-bottom:1.5rem}
   .stat-card{background:var(--surface-1);border-radius:var(--radius);padding:10px 12px}
   .stat-lbl{font-size:11px;color:var(--text-muted);margin-bottom:4px}
-  .stat-val{font-size:20px;font-weight:500;color:var(--text-primary)}
+  .stat-val{font-size:20px;font-weight:500}
   .stat-unit{font-size:13px;font-weight:400;color:var(--text-muted)}
   .injuries-list{margin-top:.5rem}
   .inj-item{padding:10px 0;border-bottom:0.5px solid var(--border);font-size:13px}
@@ -100,7 +100,10 @@
   .badge-danger{background:var(--bg-danger);color:var(--text-danger)}
   .badge-warning{background:var(--bg-warning);color:var(--text-warning)}
   .empty-state{text-align:center;padding:3rem;color:var(--text-muted);font-size:14px}
-  .empty-icon{font-size:40px;margin-bottom:12px}
+  .loading-overlay{display:flex;align-items:center;justify-content:center;padding:2rem;color:var(--text-muted);font-size:13px;gap:8px}
+  .spinner{width:16px;height:16px;border:2px solid var(--border-strong);border-top-color:var(--fill-accent);border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .sync-badge{font-size:11px;padding:2px 8px;border-radius:10px;background:var(--bg-success);color:var(--text-success);margin-left:auto}
   @media(max-width:500px){
     .form-grid{grid-template-columns:1fr}
     .form-group.full{grid-column:1}
@@ -117,6 +120,7 @@
     <h1>Registro de entrenamiento</h1>
     <p>Ciclo de 22 semanas · inicio 29 jun 2026</p>
   </div>
+  <span class="sync-badge" id="sync-badge" style="display:none">⚡ En línea</span>
 </div>
 
 <div class="container">
@@ -130,7 +134,7 @@
   <div id="tab-registro">
     <div class="info-bar">
       <div class="info-chip">📅 <span>Fecha: <strong id="fecha-display">—</strong></span></div>
-      <div class="info-chip">📆 <span>Semana del ciclo: <strong id="semana-display">—</strong> / 22</span></div>
+      <div class="info-chip">📆 <span>Semana: <strong id="semana-display">—</strong> / 22</span></div>
       <div class="info-chip">📌 <span>Día: <strong id="dia-display">—</strong></span></div>
     </div>
 
@@ -149,7 +153,7 @@
       </div>
       <div class="form-group full">
         <label>Tipo de sesión</label>
-        <div class="type-btns" id="type-btns">
+        <div class="type-btns">
           <button class="type-btn" onclick="selType(this,'Fuerza')">Fuerza</button>
           <button class="type-btn" onclick="selType(this,'Resistencia')">Resistencia</button>
           <button class="type-btn" onclick="selType(this,'Técnico-Táctica Personal')">Técnico-Táctica Personal</button>
@@ -171,7 +175,7 @@
         <label class="health-opt"><input type="radio" name="lesion" value="si" onchange="toggleLesion()"> Sí</label>
       </div>
       <div class="injury-panel" id="injury-panel" style="display:none">
-        <label>⚠️ Tipo de lesión o problema</label>
+        <span class="ilabel">⚠️ Tipo de lesión o problema</span>
         <div class="tipo-lesion-btns">
           <button class="tl-btn" onclick="selTipoLesion(this,'Muscular')">Muscular</button>
           <button class="tl-btn" onclick="selTipoLesion(this,'Articular / ligamentosa')">Articular / ligamentosa</button>
@@ -181,11 +185,11 @@
           <button class="tl-btn" onclick="selTipoLesion(this,'Otro')">Otro</button>
         </div>
         <span class="desc-label">Descripción detallada</span>
-        <textarea id="inp-lesion" rows="3" placeholder="Ej: Dolor en rodilla derecha al ejecutar patadas giratorias, cedió después de calentar..."></textarea>
+        <textarea id="inp-lesion" rows="3" placeholder="Ej: Dolor en rodilla derecha al ejecutar patadas giratorias..."></textarea>
       </div>
     </div>
 
-    <button class="btn-primary" onclick="guardarSesion()">Guardar sesión</button>
+    <button class="btn-primary" id="btn-guardar" onclick="guardarSesion()">Guardar sesión</button>
     <div class="toast-wrap"><div class="toast" id="toast"></div></div>
   </div>
 
@@ -210,6 +214,38 @@
   </div>
 </div>
 
+<!-- Firebase SDK -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js";
+import { getFirestore, collection, addDoc, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyB94KsMvXYQMD2o4H597UDp4lIXBEpqFx4",
+  authDomain: "entrenamiento-tkd.firebaseapp.com",
+  projectId: "entrenamiento-tkd",
+  storageBucket: "entrenamiento-tkd.firebasestorage.app",
+  messagingSenderId: "243425769589",
+  appId: "1:243425769589:web:ea0575249b32bfe28a603c"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+window._db = db;
+window._addDoc = addDoc;
+window._collection = collection;
+
+const q = query(collection(db, "sesiones"), orderBy("timestamp", "asc"));
+onSnapshot(q, (snapshot) => {
+  window._sesiones = snapshot.docs.map(d => ({id: d.id, ...d.data()}));
+  document.getElementById('sync-badge').style.display = 'inline';
+  renderChart();
+  renderStats();
+  renderLesiones();
+});
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <script>
 const INICIO = new Date(2026, 5, 29);
 const DIAS_ES = ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
@@ -218,57 +254,43 @@ const TIPOS = ['Fuerza','Resistencia','Técnico-Táctica Personal','TKD Élites'
 const COLORES = {'Fuerza':'#2a78d6','Resistencia':'#1baf7a','Técnico-Táctica Personal':'#eda100','TKD Élites':'#4a3aa7','TKD Universitario':'#e34948'};
 const RPE_DESC = ['','Muy suave','Suave','Moderado ligero','Moderado','Intensidad moderada','Algo duro','Duro','Muy duro','Muy muy duro','Esfuerzo máximo'];
 
-let sesiones = JSON.parse(localStorage.getItem('tkd-sesiones')||'[]');
+window._sesiones = [];
 let tipoSel = null;
 let tipoLesionSel = null;
 let vistaOffset = 0;
 let chartInst = null;
 
-function guardar(){localStorage.setItem('tkd-sesiones',JSON.stringify(sesiones));}
-
 function getCDMX(){
   return new Date(new Date().toLocaleString('en-US',{timeZone:'America/Mexico_City'}));
 }
-
-function calcSemana(fecha){
-  const dias = Math.floor((fecha - INICIO) / 86400000);
-  if(dias < 0) return null;
-  const sem = Math.floor(dias / 7) + 1;
-  return sem > 22 ? null : sem;
+function calcSemana(f){
+  const d=Math.floor((f-INICIO)/86400000);
+  if(d<0)return null;
+  const s=Math.floor(d/7)+1;
+  return s>22?null:s;
 }
-
 function initFecha(){
-  const now = getCDMX();
-  const dd = String(now.getDate()).padStart(2,'0');
-  const mm = String(now.getMonth()+1).padStart(2,'0');
-  const yyyy = now.getFullYear();
-  const sem = calcSemana(now);
-  document.getElementById('fecha-display').textContent = `${dd}/${mm}/${yyyy}`;
-  document.getElementById('dia-display').textContent = DIAS_ES[now.getDay()];
-  document.getElementById('semana-display').textContent = sem || '—';
-  if(!sem){
-    const msg = (now < INICIO) ? 'El ciclo inicia el 29 de junio de 2026' : 'El ciclo de 22 semanas ha finalizado';
-    document.getElementById('semana-display').textContent = '—';
-    document.querySelector('.info-bar').insertAdjacentHTML('beforeend',`<div class="info-chip" style="color:var(--text-danger)">${msg}</div>`);
-  }
+  const now=getCDMX();
+  const dd=String(now.getDate()).padStart(2,'0');
+  const mm=String(now.getMonth()+1).padStart(2,'0');
+  document.getElementById('fecha-display').textContent=`${dd}/${mm}/${now.getFullYear()}`;
+  document.getElementById('dia-display').textContent=DIAS_ES[now.getDay()];
+  const sem=calcSemana(now);
+  document.getElementById('semana-display').textContent=sem||'—';
 }
+function getSemana(){return calcSemana(getCDMX());}
+function getDia(){return DIAS_ES[getCDMX().getDay()];}
 
-function getSemanaActual(){return calcSemana(getCDMX());}
-function getDiaActual(){return DIAS_ES[getCDMX().getDay()];}
-
-function selType(btn, tipo){
+function selType(btn,tipo){
   document.querySelectorAll('.type-btn').forEach(b=>{b.classList.remove('selected');b.style.background='';b.style.borderColor='';b.style.color='';});
   btn.classList.add('selected');
   btn.style.background=COLORES[tipo];btn.style.borderColor=COLORES[tipo];btn.style.color='#fff';
   tipoSel=tipo;
 }
-
-function selTipoLesion(btn, tipo){
+function selTipoLesion(btn,tipo){
   document.querySelectorAll('.tl-btn').forEach(b=>b.classList.remove('sel'));
-  btn.classList.add('sel');
-  tipoLesionSel=tipo;
+  btn.classList.add('sel');tipoLesionSel=tipo;
 }
-
 function updateCalc(){
   const rpe=+document.getElementById('inp-rpe').value;
   const dur=+document.getElementById('inp-duracion').value;
@@ -276,37 +298,50 @@ function updateCalc(){
   document.getElementById('rpe-desc').textContent=RPE_DESC[rpe]||'';
   document.getElementById('carga-val').textContent=Math.round(rpe*(dur||0));
 }
-
 function toggleLesion(){
   const v=document.querySelector('input[name=lesion]:checked').value;
   document.getElementById('injury-panel').style.display=v==='si'?'block':'none';
   if(v==='no'){tipoLesionSel=null;document.querySelectorAll('.tl-btn').forEach(b=>b.classList.remove('sel'));document.getElementById('inp-lesion').value='';}
 }
 
-function guardarSesion(){
-  const semana=getSemanaActual();
-  const dia=getDiaActual();
+async function guardarSesion(){
+  const semana=getSemana();
+  const dia=getDia();
   const dur=+document.getElementById('inp-duracion').value;
   const rpe=+document.getElementById('inp-rpe').value;
   const hayLesion=document.querySelector('input[name=lesion]:checked').value==='si';
   const lesionDesc=document.getElementById('inp-lesion').value.trim();
-  if(!semana){showToast('Fuera del rango del ciclo de 22 semanas.');return;}
-  if(!dur||dur<1){showToast('Ingresa una duración válida.');return;}
-  if(!tipoSel){showToast('Selecciona el tipo de sesión.');return;}
-  if(hayLesion&&!tipoLesionSel){showToast('Selecciona el tipo de lesión.');return;}
-  if(hayLesion&&!lesionDesc){showToast('Describe la lesión o problema de salud.');return;}
-  sesiones.push({semana,dia,dur,rpe,tipo:tipoSel,carga:rpe*dur,lesion:hayLesion,tipoLesion:tipoLesionSel||null,lesionDesc:lesionDesc||null,fecha:new Date().toISOString()});
-  guardar();
-  showToast('Sesión guardada ✓');
-  document.getElementById('inp-duracion').value=60;
-  document.getElementById('inp-rpe').value=5;
-  document.querySelector('input[name=lesion][value=no]').checked=true;
-  document.getElementById('inp-lesion').value='';
-  toggleLesion();
-  tipoSel=null;tipoLesionSel=null;
-  document.querySelectorAll('.type-btn').forEach(b=>{b.classList.remove('selected');b.style.background='';b.style.borderColor='';b.style.color='';});
-  updateCalc();
-  renderChart();renderStats();renderLesiones();
+
+  if(!semana){showToast('Fuera del rango del ciclo de 22 semanas.','err');return;}
+  if(!dur||dur<1){showToast('Ingresa una duración válida.','err');return;}
+  if(!tipoSel){showToast('Selecciona el tipo de sesión.','err');return;}
+  if(hayLesion&&!tipoLesionSel){showToast('Selecciona el tipo de lesión.','err');return;}
+  if(hayLesion&&!lesionDesc){showToast('Describe la lesión o problema de salud.','err');return;}
+
+  if(!window._db){showToast('Conectando con la base de datos...','err');return;}
+
+  const btn=document.getElementById('btn-guardar');
+  btn.disabled=true;btn.textContent='Guardando...';
+
+  try {
+    await window._addDoc(window._collection(window._db,'sesiones'),{
+      semana,dia,dur,rpe,tipo:tipoSel,carga:rpe*dur,
+      lesion:hayLesion,tipoLesion:tipoLesionSel||null,lesionDesc:lesionDesc||null,
+      timestamp: Date.now()
+    });
+    showToast('Sesión guardada ✓','ok');
+    document.getElementById('inp-duracion').value=60;
+    document.getElementById('inp-rpe').value=5;
+    document.querySelector('input[name=lesion][value=no]').checked=true;
+    document.getElementById('inp-lesion').value='';
+    toggleLesion();
+    tipoSel=null;tipoLesionSel=null;
+    document.querySelectorAll('.type-btn').forEach(b=>{b.classList.remove('selected');b.style.background='';b.style.borderColor='';b.style.color='';});
+    updateCalc();
+  } catch(e){
+    showToast('Error al guardar. Revisa tu conexión.','err');
+  }
+  btn.disabled=false;btn.textContent='Guardar sesión';
 }
 
 function cambiarVista(dir){
@@ -320,19 +355,21 @@ function cambiarVista(dir){
 }
 
 function renderChart(){
+  if(typeof Chart==='undefined')return;
   const ctx=document.getElementById('mainChart');
   if(chartInst)chartInst.destroy();
+  const ses=window._sesiones||[];
   let labels,datasets;
   if(vistaOffset===0){
     labels=Array.from({length:22},(_,i)=>`S${i+1}`);
     datasets=TIPOS.map(tipo=>{
-      const data=Array.from({length:22},(_,i)=>sesiones.filter(s=>s.semana===i+1&&s.tipo===tipo).reduce((a,s)=>a+s.carga,0));
+      const data=Array.from({length:22},(_,i)=>ses.filter(s=>s.semana===i+1&&s.tipo===tipo).reduce((a,s)=>a+s.carga,0));
       return{label:tipo,data,backgroundColor:COLORES[tipo],stack:'s',borderRadius:3,borderSkipped:false};
     });
   } else {
     labels=DIAS_SEMANA;
     datasets=TIPOS.map(tipo=>{
-      const data=DIAS_SEMANA.map(dia=>sesiones.filter(s=>s.semana===vistaOffset&&s.dia===dia&&s.tipo===tipo).reduce((a,s)=>a+s.carga,0));
+      const data=DIAS_SEMANA.map(dia=>ses.filter(s=>s.semana===vistaOffset&&s.dia===dia&&s.tipo===tipo).reduce((a,s)=>a+s.carga,0));
       return{label:tipo,data,backgroundColor:COLORES[tipo],stack:'d',borderRadius:3,borderSkipped:false};
     });
   }
@@ -346,14 +383,15 @@ function renderChart(){
       }}},
       scales:{
         x:{ticks:{font:{size:12},color:'#898781',autoSkip:false,maxRotation:vistaOffset===0?45:0},grid:{display:false}},
-        y:{ticks:{font:{size:12},color:'#898781',callback:v=>v===0?'':v+' UA'},grid:{color:getComputedStyle(document.documentElement).getPropertyValue('--border')||'rgba(0,0,0,0.08)',lineWidth:1},title:{display:true,text:'Carga (UA)',color:'#898781',font:{size:11}}}
+        y:{ticks:{font:{size:12},color:'#898781',callback:v=>v===0?'':v+' UA'},grid:{color:'rgba(0,0,0,0.06)',lineWidth:1},title:{display:true,text:'Carga (UA)',color:'#898781',font:{size:11}}}
       }
     }
   });
 }
 
 function renderStats(){
-  const data=vistaOffset===0?sesiones:sesiones.filter(s=>s.semana===vistaOffset);
+  const ses=window._sesiones||[];
+  const data=vistaOffset===0?ses:ses.filter(s=>s.semana===vistaOffset);
   const total=data.reduce((a,s)=>a+s.carga,0);
   const n=data.length;
   const prom=n>0?Math.round(total/n):0;
@@ -367,10 +405,10 @@ function renderStats(){
 }
 
 function renderLesiones(){
-  const list=[...sesiones].filter(s=>s.lesion).reverse();
+  const list=[...(window._sesiones||[])].filter(s=>s.lesion).reverse();
   const el=document.getElementById('injuries-list');
   if(!list.length){
-    el.innerHTML='<div class="empty-state"><div class="empty-icon">🛡️</div>Sin lesiones registradas.</div>';
+    el.innerHTML='<div class="empty-state">🛡️<br><br>Sin lesiones registradas.</div>';
     return;
   }
   el.innerHTML=list.map(s=>`
@@ -378,9 +416,9 @@ function renderLesiones(){
       <div class="inj-header">
         <span class="badge badge-danger">Semana ${s.semana} · ${s.dia}</span>
         ${s.tipoLesion?`<span class="badge badge-warning">${s.tipoLesion}</span>`:''}
-        <span style="font-size:13px;font-weight:500;color:var(--text-primary)">${s.tipo}</span>
+        <span style="font-size:13px;font-weight:500">${s.tipo}</span>
       </div>
-      <div style="color:var(--text-secondary);font-size:13px">${s.lesionDesc}</div>
+      <div style="color:var(--text-secondary);font-size:13px">${s.lesionDesc||''}</div>
     </div>
   `).join('');
 }
@@ -396,15 +434,14 @@ function showTab(t){
   if(t==='lesiones')renderLesiones();
 }
 
-function showToast(msg){
+function showToast(msg,type){
   const t=document.getElementById('toast');
-  t.textContent=msg;t.classList.add('show');
+  t.textContent=msg;t.className='toast '+(type||'ok')+' show';
   setTimeout(()=>t.classList.remove('show'),2400);
 }
 
 initFecha();
 updateCalc();
-renderChart();renderStats();renderLesiones();
 </script>
 </body>
 </html>
